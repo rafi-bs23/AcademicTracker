@@ -1,11 +1,23 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { AppError } from './utils/appError';
+import { globalErrorHandler } from './controllers/errorController';
 
 dotenv.config({ path: './config.env' });
 const app = express();
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 app.use(express.json());
+
+app.use('*', (req: Request, res: Response, next: NextFunction) => {
+  return next(new AppError(`Route Not Founded: ${req.url}`, 404));
+});
+
+app.use(globalErrorHandler);
+
 
 export default app;

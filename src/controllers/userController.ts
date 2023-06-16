@@ -130,8 +130,24 @@ export const updateUserById = catchAsync(
   }
 );
 
-export const deleteUserById = catchAsync(
+export const deleteUserByIdandRole = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.send('delete user by id');
+    const { id, role } = req.params;
+    if (role === 'teacher') {
+      const user = await TeacherModel.findById(id);
+      await UserModel.findByIdAndDelete(user?.user);
+      await TeacherModel.findByIdAndDelete(id);
+    } else if (role === 'student') {
+      const user = await StudentModel.findById(id);
+      await UserModel.findByIdAndDelete(user?.user);
+      await StudentModel.findByIdAndDelete(id);
+    } else if (role === 'parent') {
+      const user = await ParentModel.findById(id);
+      await UserModel.findByIdAndDelete(user?.user);
+      await ParentModel.findByIdAndDelete(id);
+    } else return next(new AppError('Please provide a valid role', 404));
+    res.status(204).json({
+      status: 'User deleted successfully.',
+    });
   }
 );

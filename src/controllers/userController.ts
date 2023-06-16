@@ -22,6 +22,7 @@ const createTeacher = (data: ITeacher, user: Types.ObjectId) => {
   });
   return teacher;
 };
+
 const createStudent = (data: IStudent, user: Types.ObjectId) => {
   const { firstName, lastName, email, dateOfBirth, gender, phone, address } =
     data;
@@ -56,7 +57,6 @@ export const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, password, confirmPassword, role, ...userData } = req.body;
     const session = await mongoose.startSession();
-
     try {
       session.startTransaction();
       // Create a new user

@@ -1,12 +1,20 @@
 import express from 'express';
 
 import * as userController from '../controllers/userController';
+import * as authController from '../controllers/authController';
 
 const router = express.Router();
 
-router.post('/create', userController.createUser);
-router.get('/:role', userController.getAllRolebaseUser);
-router.delete('/:id/:role', userController.deleteUserByIdandRole);
-// router.get('/:id/:role', userController.getUserById); //provide role based user id and role like: teacher, student, parent, admin
+//route for creating user
+router.post('/create', authController.protect, userController.createUser);
+router.get('/:role', authController.protect, userController.getAllRolebaseUser);
+router.delete(
+  '/:id/:role',
+  authController.protect,
+  userController.deleteUserByIdandRole
+);
+
+//route for login user
+router.post('/login', authController.login);
 
 export default router;

@@ -6,6 +6,7 @@ export interface IUser extends Document {
   password: string;
   confirmPassword: string;
   role: string;
+  comparePassword(candidPassword: string, hashPassword: string): Boolean;
 }
 
 const checkPasswordAndConfirmPassword = function (
@@ -24,6 +25,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Please provide a password.'],
+    select: false,
   },
   confirmPassword: {
     type: String,
@@ -47,6 +49,13 @@ userSchema.pre('save', async function (next) {
   this.confirmPassword = undefined;
   next();
 });
+
+userSchema.methods.comparePassword = async function (
+  candidPassword: string,
+  hashPassword: string
+) {
+  return bcrypt.compare(candidPassword, hashPassword);
+};
 
 const UserModel = mongoose.model<IUser>('User', userSchema);
 

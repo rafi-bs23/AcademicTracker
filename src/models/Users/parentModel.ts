@@ -43,6 +43,6 @@ const parentSchema = new Schema({
   },
 });
 
-const parentModel = mongoose.model<IParent>('Parent', parentSchema);
+const ParentModel = mongoose.model<IParent>('Parent', parentSchema);
 
-export default parentModel;
+export default ParentModel;

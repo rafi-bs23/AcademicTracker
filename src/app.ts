@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
-import userRouter from './routes/adminRouter';
+import userRouter from './routes/userRouter';
 import { AppError } from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 

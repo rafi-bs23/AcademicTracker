@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 export interface IUser extends Document {
   username: string;
@@ -38,6 +39,13 @@ const userSchema = new Schema({
       message: 'role can be admin, teacher, student and parent only',
     },
   },
+});
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password!, 12);
+  this.confirmPassword = undefined;
+  next();
 });
 
 const UserModel = mongoose.model<IUser>('User', userSchema);

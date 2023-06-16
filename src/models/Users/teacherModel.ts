@@ -48,5 +48,8 @@ const teacherSchema = new Schema({
   },
 });
 
+
+
+
 const TeacherModel = mongoose.model<ITeacher>('Teacher', teacherSchema);
 export default TeacherModel;

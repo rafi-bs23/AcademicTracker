@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import UserModel, { IUser } from '../models/Users/userModel';
 import TeacherModel, { ITeacher } from '../models/Users/teacherModel';
-import { IStudent } from '../models/Users/studentModel';
-import { IParent } from '../models/Users/parentModel';
+import StudentModel, { IStudent } from '../models/Users/studentModel';
+import ParentModel, { IParent } from '../models/Users/parentModel';
 import { AppError } from '../utils/appError';
 import mongoose, { Types } from 'mongoose';
 
@@ -25,7 +25,7 @@ const createTeacher = (data: ITeacher, user: Types.ObjectId) => {
 const createStudent = (data: IStudent, user: Types.ObjectId) => {
   const { firstName, lastName, email, dateOfBirth, gender, phone, address } =
     data;
-  const teacher: ITeacher = new TeacherModel({
+  const student: IStudent = new StudentModel({
     user,
     firstName,
     lastName,
@@ -35,20 +35,21 @@ const createStudent = (data: IStudent, user: Types.ObjectId) => {
     phone,
     address,
   });
-  return teacher;
+  return student;
 };
 
 const createParent = (data: IParent, user: Types.ObjectId) => {
-  const { firstName, lastName, email, phone, address } = data;
-  const teacher: ITeacher = new TeacherModel({
+  const { student, firstName, lastName, email, phone, address } = data;
+  const parent: IParent = new ParentModel({
     user,
+    student,
     firstName,
     lastName,
     email,
     phone,
     address,
   });
-  return teacher;
+  return parent;
 };
 
 export const createUser = catchAsync(
@@ -77,8 +78,10 @@ export const createUser = catchAsync(
       else if (role === 'student') roleData = createStudent(userData, user._id);
       else if (role === 'parent') roleData = createParent(userData, user._id);
 
-      await roleData!.validate();
-      await roleData!.save({ session });
+      if (role !== 'admin') {
+        await roleData!.validate();
+        await roleData!.save({ session });
+      }
 
       await session.commitTransaction();
 
@@ -88,10 +91,30 @@ export const createUser = catchAsync(
       });
     } catch (err: any) {
       await session.abortTransaction();
-      return next(new AppError('User creation fail', 500));
+      return next(new AppError(err.message, 500));
     } finally {
       session.endSession();
     }
+  }
+);
+
+export const getAllRolebaseUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { role } = req.params;
+    let user: ITeacher[] | IStudent[] | IParent[];
+    if (role === 'teacher')
+      user = (await TeacherModel.find()) as ITeacher[]; // Type assertion
+    else if (role === 'student')
+      user = (await StudentModel.find()) as IStudent[]; // Type assertion
+    else if (role === 'parent')
+      user = (await ParentModel.find()) as IParent[]; // Type assertion
+    else return next(new AppError('Please provide a valid role', 404));
+
+    res.status(200).json({
+      status: 'success',
+      result: user.length,
+      data: user,
+    });
   }
 );
 

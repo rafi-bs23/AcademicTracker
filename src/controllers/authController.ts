@@ -39,8 +39,8 @@ export const protect = catchAsync(
     if (!user) {
       return next(new AppError('Invalid token, Please login to access.', 401));
     }
-
     req.user = user;
+
     next();
   }
 );
@@ -48,6 +48,16 @@ export const protect = catchAsync(
 //i'll wrap it some other time if needed
 export const restrictTo = function (...roles: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log(roles);
+    const user = JSON.parse(JSON.stringify(req.user));
+    const reqBody = req.body;
+    console.log(user.role);
+    if (
+      !roles.includes(user.role) ||
+      (user.role === 'teacher' && ['admin', 'teacher'].includes(reqBody.role))
+    ) {
+      return next(new AppError('This user do not have the permission', 401));
+    }
     next();
   };
 };

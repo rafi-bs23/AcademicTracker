@@ -6,11 +6,17 @@ import * as authController from '../controllers/authController';
 const router = express.Router();
 
 //route for creating user
-router.post('/create', authController.protect, userController.createUser);
+router.post(
+  '/create',
+  authController.protect,
+  authController.restrictTo('admin', 'teacher'),
+  userController.createUser
+);
 router.get('/:role', authController.protect, userController.getAllRolebaseUser);
 router.delete(
   '/:id/:role',
   authController.protect,
+  authController.restrictTo('admin'),
   userController.deleteUserByIdandRole
 );
 

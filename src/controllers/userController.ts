@@ -102,11 +102,11 @@ export const getAllRolebaseUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { role } = req.params;
     let user: ITeacher[] | IStudent[] | IParent[];
-    if (role === 'teacher')
+    if (role === 'teachers')
       user = (await TeacherModel.find()) as ITeacher[]; // Type assertion
-    else if (role === 'student')
+    else if (role === 'students')
       user = (await StudentModel.find()) as IStudent[]; // Type assertion
-    else if (role === 'parent')
+    else if (role === 'parents')
       user = (await ParentModel.find()) as IParent[]; // Type assertion
     else return next(new AppError('Please provide a valid role', 404));
 

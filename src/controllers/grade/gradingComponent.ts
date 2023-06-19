@@ -43,3 +43,15 @@ export const getAllGradingComponentForSpecificSubjectAndGrade = catchAsync(
     });
   }
 );
+
+export const deleteGradingComponent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const component = await GradingComponentModel.findByIdAndDelete(id);
+    res.status(204).json({
+      status: 'success',
+      message: 'component deleted successfully.',
+      component,
+    });
+  }
+);

@@ -9,5 +9,6 @@ router.get(
   '/:subject/:grade',
   gradingComponent.getAllGradingComponentForSpecificSubjectAndGrade
 );
+router.delete('/:id', gradingComponent.deleteGradingComponent);
 
 export default router;

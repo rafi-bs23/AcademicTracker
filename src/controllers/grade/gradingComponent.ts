@@ -32,7 +32,7 @@ export const createGradingComponent = catchAsync(
   }
 );
 
-export const getAllGraldingComponentForSpecificSubjectAndGrade = catchAsync(
+export const getAllGradingComponentForSpecificSubjectAndGrade = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { subject, grade } = req.params;
     const components = await GradingComponentModel.find({ subject, grade });

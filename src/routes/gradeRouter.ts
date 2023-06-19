@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', gradingComponent.createGradingComponent);
 router.get(
   '/:subject/:grade',
-  gradingComponent.getAllGraldingComponentForSpecificSubjectAndGrade
+  gradingComponent.getAllGradingComponentForSpecificSubjectAndGrade
 );
 
 export default router;

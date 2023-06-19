@@ -34,7 +34,13 @@ export const updateSubjectById = catchAsync(
 );
 export const deleteSubjectById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.send('delet subject');
+    const { id } = req.params;
+    const subject = await SubjectModel.findOneAndDelete({ _id: id });
+    res.status(204).json({
+      status: 'success',
+      message: 'subject delete successfully.',
+      subject,
+    });
   }
 );
 

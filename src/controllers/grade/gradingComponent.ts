@@ -31,3 +31,15 @@ export const createGradingComponent = catchAsync(
     });
   }
 );
+
+export const getAllGraldingComponentForSpecificSubjectAndGrade = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { subject, grade } = req.params;
+    const components = await GradingComponentModel.find({ subject, grade });
+    res.status(200).json({
+      status: 'success',
+      result: components.length,
+      components,
+    });
+  }
+);

@@ -2,9 +2,9 @@ import mongoose, { Document, Types } from 'mongoose';
 
 export interface IGrade extends Document {
   student: Types.ObjectId;
-  subject: Types.ObjectId;
+  gradingComponent: Types.ObjectId;
   score: Number;
-  comment: string;
+  convertedMark: number;
 }
 
 const gradeSchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ const gradeSchema = new mongoose.Schema({
     ref: 'Student',
     required: [true, 'Please Provide a student'],
   },
-  subject: {
+  gradingComponent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
     required: [true, 'Please provide a subject'],
@@ -22,8 +22,13 @@ const gradeSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Pleae provide the score'],
   },
-  comment: String,
+  convertedMark: {
+    type: Number,
+    required: [true, 'It must need converted mark from weightage'],
+  },
 });
+
+gradeSchema.index({ student: 1, gradingComponent: 1 }, { unique: true });
 
 const GradeModel = mongoose.model<IGrade>('Grade', gradeSchema);
 

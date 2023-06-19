@@ -1,14 +1,22 @@
 import express from 'express';
 
-import * as gradingComponent from '../controllers/grade/gradingComponent';
+import * as gradingComponentController from '../controllers/grade/gradingComponent';
+import * as gradeController from '../controllers/grade/gradeController';
 
 const router = express.Router();
 
-router.post('/', gradingComponent.createGradingComponent);
+//Grading Component
+router.post('/component', gradingComponentController.createGradingComponent);
 router.get(
-  '/:subject/:grade',
-  gradingComponent.getAllGradingComponentForSpecificSubjectAndGrade
+  '/component/:subject/:grade',
+  gradingComponentController.getAllGradingComponentForSpecificSubjectAndGrade
 );
-router.delete('/:id', gradingComponent.deleteGradingComponent);
+router.delete(
+  'component/:id',
+  gradingComponentController.deleteGradingComponent
+);
+
+//Grade
+router.post('/',gradeController.createGrade);
 
 export default router;

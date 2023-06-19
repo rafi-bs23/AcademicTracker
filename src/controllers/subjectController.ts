@@ -12,7 +12,7 @@ export const createSubject = catchAsync(
     });
 
     if (!teacherObj) {
-      return next(new AppError('Teacher not found!', 404));
+      return next(new AppError('Pleae provide a valid teacher id.s', 404));
     }
     const subject: ISubject = new SubjectModel({
       name,
@@ -29,7 +29,7 @@ export const createSubject = catchAsync(
 );
 export const updateSubjectById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.send('update subject');
+    res.send('update subject route');
   }
 );
 export const deleteSubjectById = catchAsync(

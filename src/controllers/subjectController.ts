@@ -7,11 +7,10 @@ import { AppError } from '../utils/appError';
 export const createSubject = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, teacher, grade } = req.body;
-    console.log(teacher);
     const teacherObj: ITeacher | null = await TeacherModel.findOne({
       _id: teacher,
     });
-    console.log(teacherObj);
+
     if (!teacherObj) {
       return next(new AppError('Teacher not found!', 404));
     }
@@ -41,6 +40,12 @@ export const deleteSubjectById = catchAsync(
 
 export const findAllSubjectInOneClass = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.send('find all subject in one class subject');
+    const { grade } = req.params;
+    const subjects: ISubject[] = await SubjectModel.find({ grade });
+    res.status(200).json({
+      status: 'success',
+      result: subjects.length,
+      subjects,
+    });
   }
 );

@@ -24,7 +24,7 @@ const createTeacher = (data: ITeacher, user: Types.ObjectId) => {
 };
 
 const createStudent = (data: IStudent, user: Types.ObjectId) => {
-  const { firstName, lastName, email, dateOfBirth, gender, phone, address } =
+  const {grade, firstName, lastName, email, dateOfBirth, gender, phone, address } =
     data;
   const student: IStudent = new StudentModel({
     user,
@@ -35,6 +35,7 @@ const createStudent = (data: IStudent, user: Types.ObjectId) => {
     gender,
     phone,
     address,
+    grade
   });
   return student;
 };

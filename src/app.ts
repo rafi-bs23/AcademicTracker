@@ -22,7 +22,7 @@ app.use('/api/v1/subject', subjectRouter);
 app.use('/api/v1/grade', gradeRouter);
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
-  return next(new AppError(`Route Not Founded: ${req.url}`, 404));
+  return next(new AppError(`Route Not Founded: `, 404));
 });
 
 app.use(globalErrorHandler);

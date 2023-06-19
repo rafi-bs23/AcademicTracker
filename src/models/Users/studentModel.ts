@@ -9,6 +9,7 @@ export interface IStudent extends Document {
   gender: string;
   phone: string;
   address: string;
+  grade: string;
 }
 
 const studentSchema = new Schema({
@@ -45,6 +46,14 @@ const studentSchema = new Schema({
   address: {
     type: String,
     required: [true, 'Please provide a address'],
+  },
+  grade: {
+    type: String,
+    enum: {
+      values: ['one', 'two', 'three', 'four', 'five'],
+      message: 'Please provide us a valid class (one, two, three, four, five)',
+    },
+    required: [true, 'Please provide a grade'],
   },
 });
 

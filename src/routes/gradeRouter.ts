@@ -17,6 +17,7 @@ router.delete(
 );
 
 //Grade
-router.post('/',gradeController.createGrade);
+router.post('/', gradeController.createGrade);
+router.get('/report-card', gradeController.getReportCard);
 
 export default router;

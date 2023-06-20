@@ -7,141 +7,177 @@ const router = express.Router();
 
 /**
  * @swagger
- * tags:
- *   name: User
- *   description: User management
+ * /create:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserCreateRequest'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserCreateResponse'
  */
 
 /**
  * @swagger
- * /user/create:
- *   post:
- *     summary: Create a new user
- *     description: Create a new user with the provided data.
- *     tags: [User]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         description: Bearer token with JWT
- *         required: true
- *         type: string
- *       - in: body
- *         name: user
- *         description: User object
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User created successfully
- *       400:
- *         description: Invalid request body or missing required fields
- *       401:
- *         description: Unauthorized access
- *       403:
- *         description: Access forbidden
- *       500:
- *         description: Internal server error
+ * components:
+ *   schemas:
+ *     UserCreateRequest:
+ *       type: object
+ *       properties:
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *         confirmPassword:
+ *           type: string
+ *         role:
+ *           type: string
+ *         oneOf:
+ *           - $ref: '#/components/schemas/TeacherCreateRequest'
+ *           - $ref: '#/components/schemas/StudentCreateRequest'
+ *           - $ref: '#/components/schemas/ParentCreateRequest'
+ *       required:
+ *         - username
+ *         - password
+ *         - confirmPassword
+ *         - role
+ *
+ *     TeacherCreateRequest:
+ *       type: object
+ *       properties:
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         dateOfBirth:
+ *           type: string
+ *           format: date
+ *         gender:
+ *           type: string
+ *         phone:
+ *           type: string
+ *         address:
+ *           type: string
+ *       required:
+ *         - firstName
+ *         - lastName
+ *         - email
+ *         - dateOfBirth
+ *         - gender
+ *         - phone
+ *         - address
+ *
+ *     StudentCreateRequest:
+ *       type: object
+ *       properties:
+ *         grade:
+ *           type: string
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         dateOfBirth:
+ *           type: string
+ *           format: date
+ *         gender:
+ *           type: string
+ *         phone:
+ *           type: string
+ *         address:
+ *           type: string
+ *       required:
+ *         - grade
+ *         - firstName
+ *         - lastName
+ *         - email
+ *         - dateOfBirth
+ *         - gender
+ *         - phone
+ *         - address
+ *
+ *     ParentCreateRequest:
+ *       type: object
+ *       properties:
+ *         student:
+ *           type: string
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         phone:
+ *           type: string
+ *         address:
+ *           type: string
+ *       required:
+ *         - student
+ *         - firstName
+ *         - lastName
+ *         - email
+ *         - phone
+ *         - address
+ *
+ *     UserCreateResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *         data:
+ *           oneOf:
+ *             - $ref: '#/components/schemas/UserResponse'
+ *             - $ref: '#/components/schemas/RoleSpecificUserResponse'
+ *
+ *     UserResponse:
+ *       type: object
+ *       properties:
+ *         username:
+ *           type: string
+ *         role:
+ *           type: string
+ *       required:
+ *         - username
+ *         - role
+ *
+ *     RoleSpecificUserResponse:
  */
+
 router.post(
   '/create',
   authController.protect,
   authController.restrictTo('admin', 'teacher'),
   userController.createUser
 );
-/**
- * @swagger
- * /user/{role}:
- *   get:
- *     summary: Get all users by role
- *     description: Retrieve all users based on the specified role.
- *     tags:
- *       - User
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: role
- *         description: Role of the users to retrieve (teachers, students, parents)
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: Users retrieved successfully
- *       401:
- *         description: Unauthorized access
- *       404:
- *         description: Role not found or invalid role
- *       500:
- *         description: Internal server error
- */
-router.get('/:role', authController.protect, userController.getAllRolebaseUser);
 
 /**
  * @swagger
- * /user/{id}/{role}:
- *   delete:
- *     summary: Delete a user by ID and role
- *     description: Delete a user based on the specified ID and role.
- *     tags:
- *       - User
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID of the user to delete
- *         required: true
- *         type: string
- *       - in: path
- *         name: role
- *         description: Role of the user to delete (teacher, student, parent)
- *         required: true
- *         type: string
- *     responses:
- *       204:
- *         description: User deleted successfully
- *       401:
- *         description: Unauthorized access
- *       404:
- *         description: Role not found or invalid role
- *       500:
- *         description: Internal server error
+ *  /{role}:
+ *    get:
+ *      summary: Get all role base user
+ *      tags: [User]
+ *
  */
+router.get('/:role', authController.protect, userController.getAllRolebaseUser);
+
 router.delete(
   '/:id/:role',
   authController.protect,
   authController.restrictTo('admin'),
   userController.deleteUserByIdandRole
 );
-
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: User login
- *     description: Authenticate and log in a user with the provided credentials.
- *     tags:
- *       - Authentication
- *     parameters:
- *       - in: body
- *         name: credentials
- *         description: User credentials
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/LoginInput'
- *     responses:
- *       200:
- *         description: User logged in successfully
- *       400:
- *         description: Invalid request body or missing required fields
- *       401:
- *         description: Unauthorized access, invalid credentials
- *       500:
- *         description: Internal server error
- */
 
 router.post('/login', authController.login);
 

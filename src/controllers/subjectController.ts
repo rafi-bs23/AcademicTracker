@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import SubjectModel, { ISubject } from '../models/GradeAndSubject/subjectModel';
 import TeacherModel, { ITeacher } from '../models/Users/teacherModel';
@@ -6,7 +6,7 @@ import { AppError } from '../utils/appError';
 
 export const createSubject = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, teacher, grade } = req.body;
+    let { name, teacher, grade } = req.body;
     const teacherObj: ITeacher | null = await TeacherModel.findOne({
       _id: teacher,
     });
@@ -14,6 +14,7 @@ export const createSubject = catchAsync(
     if (!teacherObj) {
       return next(new AppError('Pleae provide a valid teacher id.s', 404));
     }
+    name = name.toLowerCase();
     const subject: ISubject = new SubjectModel({
       name,
       teacher,

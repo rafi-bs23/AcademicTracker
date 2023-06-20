@@ -5,6 +5,9 @@ import * as gradeController from '../controllers/grade/gradeController';
 
 const router = express.Router();
 
+
+
+//Grading Componenet
 router.post('/component', gradingComponentController.createGradingComponent);
 router.get(
   '/component/:subject/:grade',

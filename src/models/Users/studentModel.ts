@@ -6,7 +6,7 @@ export interface IStudent extends Document {
   lastName: string;
   email: string;
   dateOfBirth: Date;
-  gender: string;
+  gender: 'male' | 'female';
   phone: string;
   address: string;
   grade: string;

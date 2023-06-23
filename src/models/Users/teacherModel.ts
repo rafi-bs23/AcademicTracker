@@ -6,7 +6,7 @@ export interface ITeacher extends Document {
   lastName: string;
   email: string;
   dateOfBirth: Date;
-  gender: string;
+  gender: 'male' | 'female';
   phone: string;
   address: string;
 }
@@ -47,9 +47,6 @@ const teacherSchema = new Schema({
     required: [true, 'Please provide a address'],
   },
 });
-
-
-
 
 const TeacherModel = mongoose.model<ITeacher>('Teacher', teacherSchema);
 export default TeacherModel;

@@ -2,6 +2,7 @@ import mongoose, { Document, Types } from 'mongoose';
 
 export interface IGrade extends Document {
   student: Types.ObjectId;
+  subject: Types.ObjectId;
   gradingComponent: Types.ObjectId;
   score: Number;
   convertedMark: number;
@@ -13,9 +14,14 @@ const gradeSchema = new mongoose.Schema({
     ref: 'Student',
     required: [true, 'Please Provide a student'],
   },
-  gradingComponent: {
+  subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
+    required: [true, 'Invalid subject id'],
+  },
+  gradingComponent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GradingComponent',
     required: [true, 'Please provide a subject'],
   },
   score: {

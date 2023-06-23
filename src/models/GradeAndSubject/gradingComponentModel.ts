@@ -31,7 +31,10 @@ const gradingComponentSchema = new mongoose.Schema({
   },
 });
 
-gradingComponentSchema.index({ name: 1, grade: 1 }, { unique: true });
+gradingComponentSchema.index(
+  { name: 1, grade: 1, subject: 1 },
+  { unique: true }
+);
 
 // Custom validator function to validate total weightage sum
 gradingComponentSchema.path('weightage').validate(async function (value) {

@@ -20,7 +20,10 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/swagger.json', express.static('./swagger.json'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup());
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/subject', subjectRouter);

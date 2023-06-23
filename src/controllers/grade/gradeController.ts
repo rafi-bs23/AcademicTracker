@@ -61,53 +61,25 @@ export const getReportCard = catchAsync(
     );
 
     const grades = await Promise.all(gradesPromises);
-    console.log(grades);
 
-    const reportCard = subjects.map((subject, index) => ({
-      subject,
-      grades: grades[index],
-    }));
+    const reportCard = subjects.map((subject, index) => {
+      // Sum the total marks of grades[index]
+      const totalMarks = grades[index].reduce(
+        (sum, grade) => sum + grade.convertedMark,
+        0
+      );
+
+      return {
+        subject,
+        grades: grades[index],
+        totalMarks,
+      };
+    });
 
     res.status(200).json({
       status: 'success',
-      result: subjects.length,
+      numberOfSubject: subjects.length,
       reportCard,
     });
   }
 );
-
-// const getInfo = async function (subject: Types.ObjectId) {
-
-// };
-
-// export const getReportCard = catchAsync(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const { student } = req.body;
-//     // const studentObj: IStudent | null = await StudentModel.findById(student);
-//     const gradesWithGradingComponent: IGrade[] = await GradeModel.find({
-//       student,
-//     })
-//       .populate('gradingComponent')
-//       .populate('subject')
-//       .lean();
-//     const subjects: Types.ObjectId[] = [
-//       ...new Set(gradesWithGradingComponent.map((el) => el.subject)),
-//     ];
-
-//     subjects.forEach((el) => {
-//       console.log(el);
-//       getInfo(el);
-//       // const grades: IGrade[] = await GradeModel.find(el);
-//     });
-//     // console.log(subjects);
-
-//     // console.log(grades)
-//     res.status(200).json({
-//       status: 'success',
-//       result: subjects.length,
-//       reportCard: {
-//         subjects,
-//       },
-//     });
-//   }
-// );
